@@ -1,4 +1,9 @@
 market
 ======
 
-a set of tools to work with public data feeds for stock market analysis and such
+A very simple set of java classes that I use to perform stock market analysis.
+
+license
+=======
+
+MIT
