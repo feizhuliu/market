@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import maxbacon.io.HTTP.ResultValidatorAndFilter;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 
@@ -21,13 +23,25 @@ import org.apache.commons.codec.net.URLCodec;
  * @author bacon
  */
 public class GoogleChartParser implements Iterator<Quote> {
-   private static final String      COMMA    = Pattern.quote(",");
-   private final BufferedReader     reader;
-   private String                   ln;
-   public final long                interval;
-   public final long                offset;
-   public final Map<String, String> headers;
-   private long                     lastTime = 0;
+   private static final String                  COMMA         = Pattern.quote(",");
+   private final BufferedReader                 reader;
+   private String                               ln;
+   public final long                            interval;
+   public final long                            offset;
+   public final Map<String, String>             headers;
+   private long                                 lastTime      = 0;
+
+   public static final ResultValidatorAndFilter VALIDATE_HTTP = new ResultValidatorAndFilter() {
+                                                                 public String perform(String result) throws Exception {
+                                                                    if (result.indexOf("MARKET_OPEN_MINUTE=") < 0)
+                                                                       throw new Exception("Not Valid:" + result.substring(0, Math.min(result.length(), 1000)));
+                                                                    if (result.indexOf("COLUMNS=DATE,CLOSE,HIGH,LOW,OPEN,VOLUME") < 0)
+                                                                       throw new Exception("Not Valid:" + result.substring(0, Math.min(result.length(), 1000)));
+                                                                    if (result.indexOf("EXCHANGE") < 0)
+                                                                       throw new Exception("Not Valid:" + result.substring(0, Math.min(result.length(), 1000)));
+                                                                    return result;
+                                                                 }
+                                                              };
 
    private static String decode(String x) {
       try {

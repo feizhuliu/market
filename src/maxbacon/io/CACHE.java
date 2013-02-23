@@ -2,6 +2,9 @@ package maxbacon.io;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.regex.Pattern;
+
+import maxbacon.io.HTTP.ResultValidatorAndFilter;
 
 /**
  * A very simple model for working with data via multiple tiers
@@ -13,7 +16,11 @@ public class CACHE {
    }
 
    public static class Internet implements Getter {
-      private final HTTP http = new HTTP();
+      private final HTTP http;
+      
+      public Internet(ResultValidatorAndFilter resultValidatorAndFilter) {
+         this.http = new HTTP(resultValidatorAndFilter);
+      }
 
       @Override
       public String get(String key) throws Exception {
@@ -42,6 +49,11 @@ public class CACHE {
       public String get(String key) throws Exception {
          String lookup = HASH.md5(key) + "-";
          lookup += HASH.sha1(lookup + key);
+         String[] specialKey = key.split(Pattern.quote("#"));
+         if (specialKey.length > 1) {
+            lookup = specialKey[1] + "." + lookup;
+            key = specialKey[0];
+         }
          File subdir = new File(path, lookup.charAt(0) + "");
          if (!subdir.exists())
             subdir.mkdir();

@@ -4,13 +4,14 @@ import org.joda.time.DateTime;
 
 /**
  * Simplified ways of querying the various services that are out there.
+ * 
  * @author bacon
- *
+ * 
  */
 public class URLS {
 
    public static String urlGoogleOneYearStartingAt(String symbol, String exchange, DateTime start) {
-      return "https://www.google.com/finance/getprices?q=" + symbol + "&x=" + exchange + "&i=60&p=1Y&f=d,c,v,o,h,l&df=cpct&auto=1&ts=" + start.getMillis();
+      return "https://www.google.com/finance/getprices?q=" + symbol.toUpperCase().trim() + "&x=" + exchange.toUpperCase().trim() + "&i=60&p=1Y&f=d,c,v,o,h,l&df=cpct&auto=1&ts=" + start.getMillis();
    }
 
    public static String urlYahooHistorical(String symbol, DateTime start, DateTime finish) {

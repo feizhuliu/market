@@ -12,17 +12,29 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class HTTP {
    private final HttpClient client;
 
-   public HTTP() {
+   public static interface ResultValidatorAndFilter {
+      public String perform(String result) throws Exception;
+   }
+
+   public static final ResultValidatorAndFilter NO_VALIDATION_NO_FILTERING = new ResultValidatorAndFilter() {
+                                                                              public String perform(String result) throws Exception {
+                                                                                 return result;
+                                                                              }
+                                                                           };
+
+   public final ResultValidatorAndFilter        resultValidatorAndFilter;
+
+   public HTTP(ResultValidatorAndFilter resultValidatorAndFilter) {
       this.client = new DefaultHttpClient();
+      this.resultValidatorAndFilter = resultValidatorAndFilter;
    }
 
    private String _getUtf8String(String url) throws Exception {
       try {
          HttpGet httpget = new HttpGet(url);
          ResponseHandler<String> responseHandler = new BasicResponseHandler();
-         return client.execute(httpget, responseHandler);
+         return resultValidatorAndFilter.perform(client.execute(httpget, responseHandler));
       } finally {
-         client.getConnectionManager().shutdown();
       }
    }
 
