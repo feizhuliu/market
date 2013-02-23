@@ -10,11 +10,13 @@ public class SimpleRiskGraph {
 
    public static class RiskBars {
       public final double green;
+      public final double yellow;
       public final double orange;
       public final double red;
 
-      public RiskBars(double green, double orange, double red) {
+      public RiskBars(double green, double yellow, double orange, double red) {
          this.green = green;
+         this.yellow = yellow;
          this.orange = orange;
          this.red = red;
       }
@@ -36,6 +38,9 @@ public class SimpleRiskGraph {
             double step = bars.green;
             if (y < step)
                return RiskLevel.Green;
+            step += bars.yellow;
+            if (y < step)
+               return RiskLevel.Yellow;
             step += bars.orange;
             if (y < step)
                return RiskLevel.Orange;

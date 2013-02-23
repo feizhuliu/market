@@ -11,11 +11,14 @@ public class RiskPlotter {
    private static final int GREEN  = Color.GREEN.getRGB();
    private static final int RED    = Color.RED.getRGB();
    private static final int ORANGE = Color.ORANGE.getRGB();
+   private static final int YELLOW = Color.YELLOW.getRGB();
 
    public static enum RiskLevel {
+
       Unknown(WHITE),
       Green(GREEN),
       Orange(ORANGE),
+      Yellow(YELLOW),
       Red(RED);
 
       private int color;
